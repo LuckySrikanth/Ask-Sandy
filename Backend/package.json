@@ -1,0 +1,28 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "author": "srikanth",
+  "license": "ISC",
+  "dependencies": {
+    "@lancedb/lancedb": "^0.9.0",
+    "@langchain/azure-openai": "^0.0.11",
+    "@langchain/community": "^0.2.25",
+    "@langchain/openai": "^0.2.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "html-to-text": "^9.0.5",
+    "llm-api": "^1.6.0",
+    "nodemon": "^3.1.4",
+    "playwright": "^1.46.0",
+    "uuid": "^10.0.0",
+    "vectordb": "^0.1.19",
+    "zod-gpt": "^0.16.0"
+  }
+}
