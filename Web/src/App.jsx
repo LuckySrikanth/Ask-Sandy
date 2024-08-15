@@ -1,57 +1,98 @@
 import React, { useState } from "react";
 import "./App.css";
 import AskQuestion from "./component/AskQuestion/AskQuestion";
+import { useWebsite } from "./Context/WebsiteContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   const [activeTab, setActiveTab] = useState("Demo");
   const [isPanelOpen, setIsPanelOpen] = useState(false);
-  const [websitevalue, setWebSitevalue] = useState("");
+  const { websiteValue, setWebsiteValue, extractDomain } = useWebsite();
+  let toastId = null; // Variable to store the toast ID
 
   const openPanel = () => setIsPanelOpen(true);
   const closePanel = () => setIsPanelOpen(false);
 
   const chunkingData = async (d) => {
+    const domain = extractDomain(websiteValue);
     try {
       const response = await fetch("http://localhost:5000/api/feeding", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ chunkingData: d }),
+        body: JSON.stringify({ chunkingData: d, url: domain }),
       });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Error during chunking data");
+      }
 
       const data = await response.json();
       console.log("Chunking data response:", data);
+      toast.update(toastId, {
+        render:
+          "Loading complete (100%) 👌. You can now ask questions from your site.",
+        type: "success",
+        isLoading: false,
+        autoClose: 5000,
+      });
     } catch (error) {
       console.error("Error during chunking data:", error);
+      toast.update(toastId, {
+        render: `An error occurred: ${error.message}`,
+        type: "error",
+        isLoading: false,
+        autoClose: 5000,
+      });
     }
   };
 
-  const Feedhandler = () => {
-    const fetchPromise = fetch("http://localhost:5000/api/crawl", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ url: websitevalue }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.message) {
-          return chunkingData(data.message).then(() => data);
-        } else {
-          throw new Error("No message received");
-        }
+  const Feedhandler = async () => {
+    toastId = toast.loading("Loading 25%");
+    try {
+      const response = await fetch("http://localhost:5000/api/crawl", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ url: websiteValue }),
       });
 
-    toast.promise(fetchPromise, {
-      pending: "Loading 50%... Please wait.",
-      success:
-        "Loading complete (100%) 👌. You can now ask questions from your site.",
-      error: "An error occurred 🤯. Please try again.",
-    });
+      if (!response.ok) {
+        const errorData = await response.json();
+        toast.update(toastId, {
+          render: `Error: ${errorData.message}`,
+          type: "error",
+          isLoading: false,
+          autoClose: 5000,
+        });
+        throw new Error(
+          errorData.message || `HTTP error! status: ${response.status}`
+        );
+      }
+
+      const data = await response.json();
+      if (data.message) {
+        toast.update(toastId, {
+          render: "Loading 50%",
+          type: "info",
+          isLoading: true,
+        });
+        await chunkingData(data.message);
+      } else {
+        throw new Error("No message received");
+      }
+    } catch (error) {
+      toast.update(toastId, {
+        render: `An error occurred 🤯: ${error.message}`,
+        type: "error",
+        isLoading: false,
+        autoClose: 5000,
+      });
+    }
   };
 
   return (
@@ -80,7 +121,7 @@ const App = () => {
           <input
             type="text"
             id="website-url"
-            onChange={(e) => setWebSitevalue(e.target.value)}
+            onChange={(e) => setWebsiteValue(e.target.value)}
             name="website-url"
           />
           <button className="Feed-btn" onClick={Feedhandler}>

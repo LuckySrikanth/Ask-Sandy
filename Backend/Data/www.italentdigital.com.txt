@@ -46,7 +46,7 @@ iTalent dark logo [/wp-content/uploads/2024/07/italent-logo.png] iTalent light l
    * Work With Us [https://www.italentdigital.com/careers/work-with-us]
    * Open Positions [https://italent.jobs.mojohire.ai/jobs]
 
-GO 96533
+GO 18812
  * What We Do [https://www.italentdigital.com/what-we-do]
    * Enable Next-Generation Experiences [https://www.italentdigital.com/customer-experience-consulting]
    * Transform Technology Operations [https://www.italentdigital.com/technology-operations-consulting]

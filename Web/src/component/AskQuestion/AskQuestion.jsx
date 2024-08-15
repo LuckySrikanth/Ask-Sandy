@@ -1,9 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { RiSendPlaneFill } from "react-icons/ri";
 import BeatLoader from "react-spinners/BeatLoader";
+import { useWebsite } from "../../Context/WebsiteContext";
+
 import "./AskQuestion.css";
 
 const AskQuestion = ({ isOpen, onClose }) => {
+  const { websiteValue, extractDomain } = useWebsite();
   const [messages, setMessages] = useState([]);
   const [question, setQuestion] = useState("");
   const [loading, setLoading] = useState(false);
@@ -19,6 +22,7 @@ const AskQuestion = ({ isOpen, onClose }) => {
     const hexadecimalString = randomNumber.toString(16);
     return `id-${timestamp}-${hexadecimalString}`;
   };
+  console.log(websiteValue, "websiteValue");
 
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
@@ -45,6 +49,7 @@ const AskQuestion = ({ isOpen, onClose }) => {
     };
 
     setMessages((prevMessages) => [...prevMessages, userMessage]);
+    const domain = extractDomain(websiteValue);
 
     try {
       const response = await fetch("http://localhost:5000/api/search", {
@@ -52,7 +57,7 @@ const AskQuestion = ({ isOpen, onClose }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ question }),
+        body: JSON.stringify({ question, url: domain }),
       });
 
       if (!response.ok) {
@@ -69,8 +74,7 @@ const AskQuestion = ({ isOpen, onClose }) => {
 
       setMessages((prevMessages) => [...prevMessages, botMessage]);
 
-      // Scroll to bottom after adding bot message
-      setTimeout(scrollToBottom, 100); // Delay added for smoother scrolling
+      setTimeout(scrollToBottom, 100);
     } catch (error) {
       console.error("Error:", error);
       alert(
@@ -84,7 +88,7 @@ const AskQuestion = ({ isOpen, onClose }) => {
   };
 
   useEffect(() => {
-    scrollToBottom(); // Scroll to bottom on initial load and on each message update
+    scrollToBottom();
   }, [messages]);
 
   const handleKeyDown = (e) => {

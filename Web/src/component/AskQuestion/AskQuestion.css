@@ -65,7 +65,7 @@
   color: black;
   background-color: #f0f0f0;
   resize: none;
-  padding-right: 50px; /* Ensure space for the send button */
+  padding-right: 50px;
 }
 
 .ask-question-panel .send-btn {

@@ -7,9 +7,9 @@ config();
 
 export const handleSearch = async (req, res) => {
   try {
-    const { question } = req.body;
+    const { question, url } = req.body;
 
-    const Results = await searchResults(question);
+    const Results = await searchResults(question, url);
 
     const openai = new OpenAIChatApi(
       {
