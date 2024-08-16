@@ -1,0 +1,11 @@
+# flyctl launch added from .gitignore
+# Ignore node_modules directory
+
+
+# Ignore .env file
+**\.env
+
+# Ignore package-lock.json
+**\package-lock.json
+**\.vercel
+fly.toml

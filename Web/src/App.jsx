@@ -17,13 +17,16 @@ const App = () => {
   const chunkingData = async (d) => {
     const domain = extractDomain(websiteValue);
     try {
-      const response = await fetch("http://localhost:5000/api/feeding", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ chunkingData: d, url: domain }),
-      });
+      const response = await fetch(
+        "https://asksandy-server.fly.dev/api/feeding",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ chunkingData: d, url: domain }),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -53,13 +56,16 @@ const App = () => {
   const Feedhandler = async () => {
     toastId = toast.loading("Loading 25%");
     try {
-      const response = await fetch("http://localhost:5000/api/crawl", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ url: websiteValue }),
-      });
+      const response = await fetch(
+        "https://asksandy-server.fly.dev/api/crawl",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ url: websiteValue }),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();

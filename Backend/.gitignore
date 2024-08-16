@@ -6,3 +6,4 @@
 
 # Ignore package-lock.json
 package-lock.json
+.vercel
