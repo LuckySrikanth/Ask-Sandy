@@ -11,7 +11,7 @@ const model = new AzureOpenAIEmbeddings({
   azureOpenAIApiKey: process.env.AZURE_OPENAI_API_KEY,
   azureOpenAIApiInstanceName: process.env.AZURE_OPENAI_API_INSTANCE_NAME,
   azureOpenAIApiEmbeddingsDeploymentName:
-    process.env.AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME,
+    process.env.AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME,
   azureOpenAIApiVersion: process.env.AZURE_OPENAI_API_VERSION,
 });
 
